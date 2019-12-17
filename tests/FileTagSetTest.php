@@ -19,7 +19,7 @@ class FileTagSetTest extends BaseTest
 
 	public function testTagKeyGeneratesPrefixedKeywithCustomSeparator(){
 
-		$store = new TaggableFileStore($this->app['files'], storage_path('framework/cache'),[
+		$stre = new TaggableFileStore($this->app['files'], storage_path('framework/cache'),[
 			'separator'=> '~|~',
 		]);
 		$tagSet = new FileTagSet($store,['foobar']);

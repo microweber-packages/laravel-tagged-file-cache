@@ -6,7 +6,7 @@ use MicroweberPackages\Jobs\FlushTagFromFileCacheJob;
 
 class FileTagSet extends TagSet {
 
-	protected static $driver = 'file';
+	protected static $driver = 'tfile';
 	
 	/**
 	 * Get the tag identifier key for a given tag.
