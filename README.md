@@ -1,9 +1,9 @@
 # Laravel Taggable File Cache ![Build Status](https://api.travis-ci.org/microweber-packages/laravel-tagged-file-cache.svg?branch=master)
 
-This package provides a custom file [cache driver](https://laravel.com/docs/5.1/cache#adding-custom-cache-drivers) that supports [Cache Tags](https://laravel.com/docs/5.1/cache#cache-tags) for Laravel 5.1 or Lumen 5.2+.
+This package provides a custom file [cache driver](https://laravel.com/docs/6.x/cache#adding-custom-cache-drivers) that supports [Cache Tags](https://laravel.com/docs/6.x/cache#cache-tags) for Laravel 6.x
 
 ## Usage
-This product is publicly available under the terms of the MIT license included in this repository. Please refer to the current [brand guidelines](https://www.kent.ac.uk/brand) for use of the existing brand.
+This product is publicly available under the terms of the MIT license included in this repository. 
 
 ## Installation and Requirements
 First, you'll need to require the package with Composer:
