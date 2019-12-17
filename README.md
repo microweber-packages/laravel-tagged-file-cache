@@ -1,0 +1,1 @@
+# laravel-tagged-file-cache
