@@ -12,7 +12,7 @@ class TaggableFileCacheServiceProvider extends ServiceProvider
 	 * @return void
 	 */
 	public function boot() {
-		app('cache')->extend('tfile', function($app, $config)
+		app('cache')->extend('file', function($app, $config)
 		{
 			/** @var \Illuminate\Cache\CacheManager $cache */
 
