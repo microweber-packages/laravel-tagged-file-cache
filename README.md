@@ -1,4 +1,7 @@
 # Laravel Taggable File Cache
+
+![Build Status](https://api.travis-ci.org/microweber-packages/laravel-tagged-file-cache.svg?branch=master)
+
 This package provides a custom file [cache driver](https://laravel.com/docs/5.1/cache#adding-custom-cache-drivers) that supports [Cache Tags](https://laravel.com/docs/5.1/cache#cache-tags) for Laravel 5.1 or Lumen 5.2+.
 
 ## Usage
