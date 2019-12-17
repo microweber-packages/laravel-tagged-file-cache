@@ -25,4 +25,9 @@ class TaggedFileCache extends TaggedCache
 	{
 		return $this->tags->getNamespace() . $this->store->separator . $key;
 	}
+
+	public function getPrefix()
+    {
+        // TODO: Implement getPrefix() method.
+    }
 }

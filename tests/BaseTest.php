@@ -23,7 +23,7 @@ abstract class BaseTest extends Orchestra\Testbench\TestCase
 	 */
 	protected function getEnvironmentSetUp($app)
 	{
-		$app['config']->set('app.key','tQbgKF5NH5zMyGh4vCNypFAzx9trCkE6');
+		$app['config']->set('app.key','tQbgKF5NH5zMyGh4vCNypFAzx9trCkE6x');
 
 		// Setup default database to use sqlite :memory:
 		$app['config']->set('cache.default', 'tfile');
