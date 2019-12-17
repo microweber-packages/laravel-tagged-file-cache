@@ -2,7 +2,9 @@ language: php
 php:
   - 7.2
 before_script:
-  - composer install --prefer-dist --dev
+ - travis_retry composer install
+ - curl -sSfL -o ~/.phpenv/versions/$TRAVIS_PHP_VERSION/bin/phpunit https://phar.phpunit.de/phpunit-5.7.phar
+ - composer install --prefer-dist --dev
 script: "phpunit"
 notifications:
   email: false
