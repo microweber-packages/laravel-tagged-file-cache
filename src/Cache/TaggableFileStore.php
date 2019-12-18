@@ -80,7 +80,6 @@ class TaggableFileStore extends FileStore
 
     public function flushOldTag($tagId)
     {
-
         foreach ($this->files->directories($this->directory) as $directory) {
             if (Str::contains(basename($directory), $tagId)) {
                 $this->files->deleteDirectory($directory);
