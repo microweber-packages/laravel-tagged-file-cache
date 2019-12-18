@@ -21,6 +21,10 @@ class TaggableFileStore extends FileStore
      */
     public function __construct(Filesystem $files, $directory, $options = [])
     {
+        if (!is_dir($directory)) {
+            $this->_mkdirRecursive($directory);
+        }
+        
         $defaults = [
             'separator' => '---',
             'queue' => null
@@ -86,5 +90,16 @@ class TaggableFileStore extends FileStore
             }
         }
 
+    }
+    
+    private function _mkdirRecursive($pathname)
+    {
+        if ($pathname == '') {
+            return false;
+        }
+
+        is_dir(dirname($pathname)) || $this->_mkdirRecursive(dirname($pathname));
+
+        return is_dir($pathname) || @mkdir($pathname);
     }
 }
