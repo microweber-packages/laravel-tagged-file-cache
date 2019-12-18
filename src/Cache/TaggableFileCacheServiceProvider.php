@@ -14,7 +14,6 @@ class TaggableFileCacheServiceProvider extends ServiceProvider
     public function boot()
     {
         app('cache')->extend('tfile', function ($app, $config) {
-            /** @var \Illuminate\Cache\CacheManager $cache */
 
             $store = new TaggableFileStore($this->app['files'], $config['path'], $config);
 
