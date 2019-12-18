@@ -6,7 +6,6 @@ use Illuminate\Cache\TaggedCache;
 
 class TaggedFileCache extends TaggedCache
 {
-
     /**
      * {@inheritdoc}
      */

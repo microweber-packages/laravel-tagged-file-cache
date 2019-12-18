@@ -21,7 +21,6 @@ class FileTagSet extends TagSet
         return 'cache_tags' . $this->store->separator . preg_replace('/[^\w\s\d\-_~,;\[\]\(\).]/', '~', $name);
     }
 
-
     /**
      * Reset the tag and return the new tag identifier.
      *
