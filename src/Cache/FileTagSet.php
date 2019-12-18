@@ -30,15 +30,10 @@ class FileTagSet extends TagSet
      */
     public function resetTag($name)
     {
-
         $oldId = $this->store->get($this->tagKey($name));
 
         if ($oldId !== false) {
-            $job = new FlushTagFromFileCacheJob($oldId, static::$driver);
-            if (!empty($this->store->queue)) {
-                $job->onQueue($this->store->queue);
-            }
-            dispatch($job);
+            app('cache')->driver(self::$driver)->flushOldTag($this->getNamespace());
         }
 
         return parent::resetTag($name);
