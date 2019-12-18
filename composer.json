@@ -17,5 +17,10 @@
 	    "psr-4": {
 	      "MicroweberPackages\\": "src/"
 	    }
-	}
+	},
+  "homepage": "http://microweber.com",
+  "license": "MIT",
+  "support": {
+    "email": "support@microweber.com"
+  }
 }
