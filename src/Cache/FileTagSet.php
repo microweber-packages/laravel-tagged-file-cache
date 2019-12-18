@@ -51,15 +51,7 @@ class FileTagSet extends TagSet
      */
     public function getNamespace()
     {
-        $locale = app()->getLocale();
-
-        if ($locale) {
-            $folder = '/' . $locale . '-' . app()->environment() . '/';
-        } else {
-            $folder = '/' . app()->environment() . '/';
-        }
-
-        return $folder . md5(implode('_', $this->tagIds()));
+        return md5(implode('_', $this->tagIds()));
     }
 
 }

@@ -13,18 +13,18 @@ class FileTagSetTest extends BaseTest
         $store = new TaggableFileStore($this->app['files'], storage_path('framework/cache'), []);
         $tagSet = new FileTagSet($store, ['foobar']);
 
-        $this->assertEquals('cache_tags~#~foobar', $tagSet->tagKey('foobar'));
+        $this->assertEquals('cache_tags---foobar', $tagSet->tagKey('foobar'));
     }
 
 
     public function testTagKeyGeneratesPrefixedKeywithCustomSeparator()
     {
         $store = new TaggableFileStore($this->app['files'], storage_path('framework/cache'), [
-            'separator' => '~|~',
+            'separator' => '---',
         ]);
         $tagSet = new FileTagSet($store, ['foobar']);
 
-        $this->assertEquals('cache_tags~|~foobar', $tagSet->tagKey('foobar'));
+        $this->assertEquals('cache_tags---foobar', $tagSet->tagKey('foobar'));
     }
 
     public function testResetTagDispatchesJob()

@@ -27,7 +27,7 @@ class TaggableFileStoreTest extends BaseTest
 
         $store = new TaggableFileStore($this->app['files'], storage_path('framework/cache'), []);
         $reflectionMethod->setAccessible(true);
-        $path = $reflectionMethod->invoke($store, 'boofar~#~foobar');
+        $path = $reflectionMethod->invoke($store, 'boofar---foobar');
 
         $this->assertTrue(Str::contains($path, storage_path('framework/cache')));
         $this->assertTrue(str_replace(storage_path('framework/cache'), '', $path) === '/boofar/88/43/8843d7f92416211de9ebb963ff4ce28125932878');
@@ -38,9 +38,9 @@ class TaggableFileStoreTest extends BaseTest
     {
         $reflectionMethod = new ReflectionMethod(TaggableFileStore::class, 'path');
 
-        $store = new TaggableFileStore($this->app['files'], storage_path('framework/cache'), ['separator' => '~|~']);
+        $store = new TaggableFileStore($this->app['files'], storage_path('framework/cache'), ['separator' => '---']);
         $reflectionMethod->setAccessible(true);
-        $path = $reflectionMethod->invoke($store, 'boofar~|~foobar');
+        $path = $reflectionMethod->invoke($store, 'boofar---foobar');
 
         $this->assertTrue(Str::contains($path, storage_path('framework/cache')));
         $this->assertTrue(str_replace(storage_path('framework/cache'), '', $path) === '/boofar/88/43/8843d7f92416211de9ebb963ff4ce28125932878');

@@ -15,7 +15,16 @@ class TaggableFileCacheServiceProvider extends ServiceProvider
     {
         app('cache')->extend('tfile', function ($app, $config) {
 
-            $store = new TaggableFileStore($this->app['files'], $config['path'], $config);
+            $locale = app()->getLocale();
+            if ($locale) {
+                $folder = app()->environment() . '-' . $locale . DIRECTORY_SEPARATOR;
+            } else {
+                $folder = app()->environment() . DIRECTORY_SEPARATOR;
+            }
+
+            $configPath = $config['path'] . DIRECTORY_SEPARATOR . $folder;
+
+            $store = new TaggableFileStore($this->app['files'], $configPath, $config);
 
             return app('cache')->repository($store);
         });
