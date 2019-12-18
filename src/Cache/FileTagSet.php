@@ -43,5 +43,15 @@ class FileTagSet extends TagSet
 
         return parent::resetTag($name);
     }
+    
+     /**
+     * Get a unique namespace that changes when any of the tags are flushed.
+     *
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return implode('_', $this->tagIds());
+    }
 
 }
