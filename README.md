@@ -51,14 +51,5 @@ Cache::tags($tags)->flush();
 ## Optional Configuration
 There are some optional config options available in the store definition above:
 
-`queue` :  accepts the string name of a queue to use for [tag clean up](#tag-cleanup), will use the default queue if omitted.
-`separator` : defines the separator character or sequence to be used internally, this should be chosen to **never** collide with a key value. defaults to `~#~` if omitted.
-
-
-## Tag Cleanup
-To offset the work of cleaning up cache entries when a tag is flushed this task is added as a Job
-and queued using laravel's inbuilt [queueing](https://laravel.com/docs/5.1/queues).
-Note: laravel's default queue driver is `sync` which will result in the job being executed synchronously,
-it is strongly advised you use an alternate queue driver with appropriate workers to offset this work
-if you wish to use this cache driver. 
+`separator` : defines the separator character or sequence to be used internally, this should be chosen to **never** collide with a key value. defaults to `---` if omitted.
 
