@@ -22,7 +22,7 @@ class TaggableFileStore extends FileStore
     public function __construct(Filesystem $files, $directory, $options = [])
     {
         $defaults = [
-            'separator' => '~#~',
+            'separator' => '---',
             'queue' => null
         ];
 
