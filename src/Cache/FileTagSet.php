@@ -31,10 +31,10 @@ class FileTagSet extends TagSet
     public function resetTag($name)
     {
 
-        $oldID = $this->store->get($this->tagKey($name));
+        $oldId = $this->store->get($this->tagKey($name));
 
-        if ($oldID !== false) {
-            $job = new FlushTagFromFileCacheJob($oldID, static::$driver);
+        if ($oldId !== false) {
+            $job = new FlushTagFromFileCacheJob($oldId, static::$driver);
             if (!empty($this->store->queue)) {
                 $job->onQueue($this->store->queue);
             }
@@ -51,7 +51,15 @@ class FileTagSet extends TagSet
      */
     public function getNamespace()
     {
-        return implode('_', $this->tagIds());
+        $locale = app()->getLocale();
+
+        if ($locale) {
+            $folder = '/' . $locale . '-' . app()->environment() . '/';
+        } else {
+            $folder = '/' . app()->environment() . '/';
+        }
+
+        return $folder . md5(implode('_', $this->tagIds()));
     }
 
 }
