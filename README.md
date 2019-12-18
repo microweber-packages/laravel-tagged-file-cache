@@ -34,6 +34,20 @@ Finally, add the necessary config to  `config\cache.php`.
 ],
 ```
 
+You are ready to use tag file caching..
+```
+$minutes = 1111 * 4;
+$tags = ['people', 'cars', 'shamans'];
+Cache::tags($tags)->put('name', 'John', $minutes);
+
+$john = Cache::tags($array)->get('name');
+var_dump($john); // Output: John
+
+// If you want to delete tags
+Cache::tags($tags)->flush();
+```
+
+
 ## Optional Configuration
 There are some optional config options available in the store definition above:
 
