@@ -22,12 +22,12 @@ Then, update `config/app.php` by adding an entry for the service provider.
 Finally, add the necessary config to  `config\cache.php`. 
 
 ```
-'default' => env('CACHE_DRIVER', 'file'),
+'default' => env('CACHE_DRIVER', 'tfile'),
 
 'stores' => [
 
-		'file' => [
-			'driver' => 'file',
+		'tfile' => [
+			'driver' => 'tfile',
 			'path'   => storage_path('framework/cache')
 		],
 		// ...
