@@ -60,15 +60,6 @@ class TaggableFileStore implements Store
 
     }
 
-    public function appendLocale($key)
-    {
-        //        static $locale_suffix;
-//        if ($locale_suffix){
-//            $locale_suffix = '_' . app()->getLocale();
-//        }
-        return $key;
-    }
-
     /**
      * Retrieve an item from the cache by key.
      *
@@ -78,7 +69,6 @@ class TaggableFileStore implements Store
      */
     public function get($key)
     {
-        $key = $this->appendLocale($key);
 
         if (!empty($this->tags)) {
             foreach ($this->tags as $tag) {
@@ -126,13 +116,9 @@ class TaggableFileStore implements Store
      */
     public function put($key, $value, $minutes)
     {
-        $key = $this->appendLocale($key);
-        $this->memory[ $key ] = $value;
+        $this->memory[$key] = $value;
         $value = $this->expiration($minutes).serialize($value);
-        $path = $this->path($key);
-        $path = $this->normalizePath($path, false);
-
-        // $this->createCacheDirectory($path);
+        $pathKey = $this->path($key);
 
         $skip = false;
         if (!empty($this->tags)) {
@@ -141,10 +127,11 @@ class TaggableFileStore implements Store
                     $skip = true;
                 }
             }
-            $this->_addTagsMap();
+            $this->_makeTagMapFiles();
         }
 
-        var_dump($path);
+
+        var_dump($pathKey);
         die();
         if (!$skip) {
             @file_put_contents($path, $value);
@@ -209,7 +196,7 @@ class TaggableFileStore implements Store
      *
      * @param string $path
      */
-    private function _addTagsMap()
+    private function _makeTagMapFiles()
     {
         $cacheFolder = $this->normalizePath($this->directoryTags, false);
         if (!is_dir($cacheFolder)) {
@@ -225,6 +212,13 @@ class TaggableFileStore implements Store
         }
     }
 
+    private function _addCacheToTag($tag)
+    {
+
+
+        var_dump($tag);
+        die();
+    }
     /**
      * Get an item from the cache, or store the default value.
      *
@@ -236,7 +230,6 @@ class TaggableFileStore implements Store
      */
     public function remember($key, $minutes, Closure $callback)
     {
-        $key = $this->appendLocale($key);
 
         // If the item exists in the cache we will just return this immediately
         // otherwise we will execute the given Closure and cache the result
@@ -260,8 +253,6 @@ class TaggableFileStore implements Store
      */
     public function rememberForever($key, Closure $callback)
     {
-        $key = $this->appendLocale($key);
-
         // If the item exists in the cache we will just return this immediately
         // otherwise we will execute the given Closure and cache the result
         // of that execution for the given number of minutes. It's easy.
@@ -294,8 +285,6 @@ class TaggableFileStore implements Store
      */
     public function increment($key, $value = 1)
     {
-        $key = $this->appendLocale($key);
-
         throw new \LogicException('Not supported by this driver.');
     }
 
@@ -309,8 +298,6 @@ class TaggableFileStore implements Store
      */
     public function decrement($key, $value = 1)
     {
-        $key = $this->appendLocale($key);
-
         throw new \LogicException('Not supported by this driver.');
     }
 
@@ -322,8 +309,6 @@ class TaggableFileStore implements Store
      */
     public function forever($key, $value)
     {
-        $key = $this->appendLocale($key);
-
         return $this->put($key, $value, 0);
     }
 
@@ -365,8 +350,6 @@ class TaggableFileStore implements Store
      */
     public function forget($key)
     {
-        $key = $this->appendLocale($key);
-
         $file = $this->path($key);
 
         if ($this->files->exists($file)) {
@@ -446,15 +429,9 @@ class TaggableFileStore implements Store
      */
     protected function path($key)
     {
-        $key = $this->appendLocale($key);
-
         $prefix = !empty($this->prefix) ? $this->prefix.'/' : '';
-        $subdir = 'global';
-        if (!empty($this->tags)) {
-            $subdir = reset($this->tags);
-        }
 
-        return $this->directory.'/'.$subdir.'/'.$prefix.trim($key, '/').'.cache';
+        return $this->directory.'/'.$prefix.'data/'.trim($key).'.cache';
     }
 
     /**
