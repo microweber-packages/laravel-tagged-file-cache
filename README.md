@@ -40,7 +40,7 @@ $minutes = 1111 * 4;
 $tags = ['people', 'cars', 'shamans'];
 Cache::tags($tags)->put('name', 'John', $minutes);
 
-$name = Cache::tags($array)->get('name');
+$name = Cache::tags($tags)->get('name');
 var_dump($name); // Output: John
 
 // If you want to delete tags
