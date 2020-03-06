@@ -8,12 +8,32 @@ use MicroweberPackages\Cache\TaggedFileCache;
 class TaggableFileStoreTest extends BaseTest
 {
 
-    public function testSimplePut()
+    public function testSimple()
     {
-        Cache::put('Bozhidar', 'firstName', now()->addMinutes(10));
+        Cache::put('coffe', '3v1');
+        $this->assertEquals('3v1', Cache::get('coffe'));
 
+    }
 
-        var_dump(Cache::get('firstName'));
+    public function testPutWithoutTags()
+    {
+        Cache::put('firstName', 'Bozhidar', now()->addMinutes(10));
+        $this->assertEquals('Bozhidar', Cache::get('firstName'));
+
+        Cache::put('lastName', 'Slaveykov', now()->addMinutes(10));
+        $this->assertEquals('Slaveykov', Cache::get('lastName'));
+
+    }
+
+    public function testGetWithoutTags()
+    {
+        $this->assertEquals('Bozhidar', Cache::get('firstName'));
+        $this->assertEquals('Slaveykov', Cache::get('lastName'));
+    }
+
+    public function testPutTags()
+    {
+
 
     }
 

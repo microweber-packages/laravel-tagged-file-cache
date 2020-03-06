@@ -32,8 +32,6 @@ class TaggableFileStore implements Store
     protected $tags;
     protected $directoryTags;
 
-    public $deleted_tags = array();
-
     /**
      * Create a new file cache store instance.
      *
@@ -43,7 +41,7 @@ class TaggableFileStore implements Store
      */
     public function __construct(Filesystem $files, $directory, $options = [])
     {
-
+        $this->tags = array();
         $this->files = $files;
         $this->directory = $directory;
 
@@ -53,8 +51,6 @@ class TaggableFileStore implements Store
         $this->prefix = $prefix;
 
         $this->directory = \Config::get('cache.stores.file.path').'/'.app()->environment();
-        $this->tags = array();
-
         $this->directoryTags = $this->directory.(!empty($prefix) ? '/'.$prefix : '').'/tags';
 
     }
@@ -74,7 +70,6 @@ class TaggableFileStore implements Store
         }
 
         $findTagPath = $this->getPath() . $findTagPath;
-
         if (!$this->files->exists($findTagPath)) {
             return;
         }
@@ -107,6 +102,10 @@ class TaggableFileStore implements Store
 
     private function _findCachePathByKey($key)
     {
+        if (empty($this->tags)) {
+            $this->tags[] = 'global';
+        }
+
         $findTagPath = false;
         foreach ($this->tags as $tag) {
             $tagMap = $this->_getTagMapByName($tag);
@@ -133,24 +132,25 @@ class TaggableFileStore implements Store
     public function put($key, $value, $seconds)
     {
         $value = $this->expiration($seconds) . serialize($value);
+
         $filename = $this->generatePathFilename($key);
-        $path = $this->getPath() . $filename;
-        $path = $this->normalizePath($path);
+        $cachePath = $this->getPath();
 
-        $skip = false;
-        if (!empty($this->tags)) {
-            foreach ($this->tags as $tag) {
-                if (in_array($tag, $this->deleted_tags)) {
-                    $skip = true;
-                }
-            }
-            $this->_makeTagMapFiles();
+        if (!$this->files->isDirectory($cachePath)) {
+            $this->makeDirRecursive($cachePath);
         }
 
-        if (!$skip) {
-            $this->_addKeyPathToTagMap($key, $filename);
-            file_put_contents($path, $value);
-        }
+        $path = $cachePath . $filename;
+        $path = $this->normalizePath($path, false);
+
+        // Generate tag map files
+        $this->_makeTagMapFiles();
+
+        // Add key path to tag map
+        $this->_addKeyPathToTagMap($key, $filename);
+
+        // Save key value in file
+        $this->files->put($path, $value);
     }
 
     public function putMany(array $values, $seconds) {
@@ -192,6 +192,9 @@ class TaggableFileStore implements Store
      */
     public function tags($tags)
     {
+        // Clear cached tags
+        $this->tags = array();
+
         $prepareTags = array();
         if (is_string($tags)) {
             $prepareTags = explode(',', $tags);
@@ -215,6 +218,10 @@ class TaggableFileStore implements Store
         $cacheFolder = $this->normalizePath($this->directoryTags, false);
         if (!is_dir($cacheFolder)) {
             $this->makeDirRecursive($cacheFolder);
+        }
+
+        if (empty($this->tags)) {
+            $this->tags[] = 'global';
         }
 
         foreach ($this->tags as $tag) {
@@ -245,7 +252,7 @@ class TaggableFileStore implements Store
     {
         foreach ($this->tags as $tag) {
 
-            $cacheFile = $this->directoryTags . '\\'. $tag .'.json';
+            $cacheFile = $this->directoryTags . '\\' . $tag . '.json';
             $cacheFile = $this->normalizePath($cacheFile, false);
 
             $cacheMapContent = file_get_contents($cacheFile);
@@ -253,8 +260,9 @@ class TaggableFileStore implements Store
 
             $cacheMapContent[$key] = $filename;
 
-            file_put_contents($cacheFile, json_encode($cacheMapContent, JSON_PRETTY_PRINT));
+            $this->files->put($cacheFile, json_encode($cacheMapContent, JSON_PRETTY_PRINT));
         }
+
     }
     /**
      * Get an item from the cache, or store the default value.
@@ -363,7 +371,7 @@ class TaggableFileStore implements Store
             }
         }
         foreach ($string_array as $sa) {
-            $this->deleted_tags[] = $sa;
+
             $file = $this->directoryTags.'/'.$sa;
             if ($this->files->exists($file)) {
                 $farr = file($file);
@@ -408,9 +416,6 @@ class TaggableFileStore implements Store
             }
         } else {
             foreach ($this->tags as $tag) {
-                if (in_array($tag, $this->deleted_tags)) {
-                    //   break;
-                }
 
                 $items = $this->forgetTags($tag);
                 $del = $this->directory.'/'.$tag;
@@ -459,7 +464,9 @@ class TaggableFileStore implements Store
      */
     protected function getPath()
     {
-        $dir = $this->directory.'/data/';
+        $dir = $this->directory .'/'. $this->prefix .'/data/';
+        $dir = $this->normalizePath($dir);
+
         if (!is_dir($dir)) {
             $this->makeDirRecursive($dir);
         }
@@ -477,20 +484,18 @@ class TaggableFileStore implements Store
         return $tagsHash  .'.cache';
     }
 
+
     /**
-     * Get the expiration time based on the given minutes.
+     * Get the expiration time based on the given seconds.
      *
-     * @param int $minutes
-     *
+     * @param  int  $seconds
      * @return int
      */
-    protected function expiration($minutes)
+    protected function expiration($seconds)
     {
-        if ($minutes === 0) {
-            return 9999999999;
-        }
+        $time = $this->availableAt($seconds);
 
-        return time() + ($minutes * 60);
+        return $seconds === 0 || $time > 9999999999 ? 9999999999 : $time;
     }
 
     public function normalizePath($path, $slash_it = true)
@@ -585,13 +590,7 @@ class TaggableFileStore implements Store
 
             // if the option to empty is not set to true
             if ($empty == false) {
-                @deleteDirRecursive($directory);
-                // try to delete the now empty directory
-                //            if (!deleteDirRecursive($directory)) {
-                //
-                //                // return false if not possible
-                //                return FALSE;
-                //            }
+                $this->deleteDirRecursive($directory);
             }
 
             // return success
