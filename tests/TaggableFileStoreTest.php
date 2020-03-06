@@ -37,13 +37,35 @@ class TaggableFileStoreTest extends BaseTest
 
        $this->assertEquals('Peter', Cache::tags('people')->get('firstName'));
        $this->assertEquals('Peter', Cache::tags('artists')->get('firstName'));
+       $this->assertEquals('Peter', Cache::tags('artists', 'people')->get('firstName'));
+       $this->assertEquals('Peter', Cache::tags('people', 'artists')->get('firstName'));
+
        $this->assertEquals(NULL, Cache::tags('wrongTag')->get('firstName'));
    }
 
 
-    public function testFlush()
+    public function testFlushByTag()
     {
-        Cache::tags(['people'])->flush();
+        // Flush people tag
+        Cache::tags(['people', 'artists'])->flush(); // This will be delete all asociated files with tag people
+
+        // The caches from this tags must be null
+        $this->assertEquals(NULL, Cache::tags('people')->get('firstName'));
+        $this->assertEquals(NULL, Cache::tags('artists')->get('firstName'));
+
+
+        // The caches form global must be valid
+        $this->assertEquals('Bozhidar', Cache::get('firstName'));
+        $this->assertEquals('Slaveykov', Cache::get('lastName'));
+
+    }
+
+    public function testFlushAll()
+    {
+        Cache::flush(); // This will be delete all asociated files with tag people
+
+        $this->assertEquals(NULL, Cache::get('firstName'));
+        $this->assertEquals(NULL, Cache::get('lastName'));
     }
 
 }
