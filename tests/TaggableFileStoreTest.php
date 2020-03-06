@@ -31,10 +31,11 @@ class TaggableFileStoreTest extends BaseTest
         $this->assertEquals('Slaveykov', Cache::get('lastName'));
     }
 
-    public function testPutTags()
+
+
+    public function testFlush()
     {
-
-
+      //  Cache::flush();
     }
 
 }

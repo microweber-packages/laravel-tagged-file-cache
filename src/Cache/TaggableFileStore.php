@@ -154,9 +154,7 @@ class TaggableFileStore implements Store
     }
 
     public function putMany(array $values, $seconds) {
-
-        // your code here
-
+        throw new \Exception('This method is not supported.');
     }
 
     /**
@@ -410,19 +408,10 @@ class TaggableFileStore implements Store
      */
     public function flush($all = false)
     {
-        if (empty($this->tags) or $all == true) {
-            if (is_dir($this->directory)) {
-                $this->deleteDirRecursive($this->directory);
-            }
-        } else {
-            foreach ($this->tags as $tag) {
+        $mainCacheDir = $this->directory . '/'. $this->prefix;
+        $mainCacheDir = $this->normalizePath($mainCacheDir);
 
-                $items = $this->forgetTags($tag);
-                $del = $this->directory.'/'.$tag;
-                $del = $this->normalizePath($del);
-                $this->deleteDirRecursive($del);
-            }
-        }
+        $this->files->deleteDirectory($mainCacheDir);
     }
 
     /**
@@ -540,61 +529,4 @@ class TaggableFileStore implements Store
         return is_dir($pathname) || @mkdir($pathname);
     }
 
-    public function deleteDirRecursive($directory, $empty = true)
-    {
-        // if the path has a slash at the end we remove it here
-        if (substr($directory, -1) == DIRECTORY_SEPARATOR) {
-            $directory = substr($directory, 0, -1);
-        }
-
-        // if the path is not valid or is not a directory ...
-        if (!is_dir($directory)) {
-            // ... we return false and exit the function
-            return false;
-
-            // ... if the path is not readable
-        } elseif (!is_readable($directory)) {
-            // ... we return false and exit the function
-            return false;
-
-            // ... else if the path is readable
-        } else {
-            // we open the directory
-            $handle = opendir($directory);
-
-            // and scan through the items inside
-            while (false !== ($item = readdir($handle))) {
-                // if the filepointer is not the current directory
-                // or the parent directory
-                if ($item != '.' && $item != '..') {
-                    // we build the new path to delete
-                    $path = $directory.DIRECTORY_SEPARATOR.$item;
-
-                    // if the new path is a directory
-                    if (is_dir($path)) {
-                        // we call this function with the new path
-                        $this->deleteDirRecursive($path, $empty);
-                        // if the new path is a file
-                    } else {
-                        //   $path = normalizePath($path, false);
-                        try {
-                            @unlink($path);
-                        } catch (Exception $e) {
-                        }
-                    }
-                }
-            }
-
-            // close the directory
-            closedir($handle);
-
-            // if the option to empty is not set to true
-            if ($empty == false) {
-                $this->deleteDirRecursive($directory);
-            }
-
-            // return success
-            return true;
-        }
-    }
 }
