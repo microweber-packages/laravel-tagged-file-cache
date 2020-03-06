@@ -29,7 +29,7 @@ class TaggableFileStore implements Store
 
 
     protected $prefix;
-    protected $tags;
+    protected $tags = array();
     protected $directoryTags;
 
     /**
@@ -41,7 +41,6 @@ class TaggableFileStore implements Store
      */
     public function __construct(Filesystem $files, $directory, $options = [])
     {
-        $this->tags = array();
         $this->files = $files;
         $this->directory = $directory;
 
@@ -52,11 +51,12 @@ class TaggableFileStore implements Store
 
         $this->directory = \Config::get('cache.stores.file.path').'/'.app()->environment();
         $this->directoryTags = $this->directory.(!empty($prefix) ? '/'.$prefix : '').'/tags';
-
     }
 
     /**
      * Retrieve an item from the cache by key.
+     *
+     *
      *
      * @param string $key
      *
@@ -103,7 +103,7 @@ class TaggableFileStore implements Store
     private function _findCachePathByKey($key)
     {
         if (empty($this->tags)) {
-            $this->tags[] = 'global';
+            $this->tags[] = '___global';
         }
 
         $findTagPath = false;
@@ -151,6 +151,8 @@ class TaggableFileStore implements Store
 
         // Save key value in file
         $this->files->put($path, $value);
+
+        $this->tags = array();
     }
 
     public function putMany(array $values, $seconds) {
@@ -219,7 +221,7 @@ class TaggableFileStore implements Store
         }
 
         if (empty($this->tags)) {
-            $this->tags[] = 'global';
+            $this->tags[] = '___global';
         }
 
         foreach ($this->tags as $tag) {
