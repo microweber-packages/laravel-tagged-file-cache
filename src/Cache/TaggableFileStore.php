@@ -27,11 +27,28 @@ class TaggableFileStore implements Store
      */
     protected $directory;
 
+    /**
+     *  The directory data of cache files
+     * @var array[]
+     */
     protected $directoryData = false;
+
+    /*
+     * The directory data of tag map files
+     * @var array[]
+     */
     protected $directoryTags = false;
 
+    /**
+     * The prefix for the cache folder
+     * @var string
+     */
     protected $prefix = 'tfile';
 
+    /**
+     * The map off all tags
+     * @var array
+     */
     protected $tags = array();
 
     /**
@@ -46,13 +63,13 @@ class TaggableFileStore implements Store
         $this->files = $files;
         $this->directory = $directory;
 
-        $this->directory = \Config::get('cache.stores.file.path').'/'.app()->environment();
+        $this->directory = \Config::get('cache.stores.tfile.path').'/'.app()->environment();
+
         $this->directoryTags = $this->directory.(!empty($this->prefix) ? '/'.$this->prefix : '').'/tags';
         $this->directoryData = $this->directory.(!empty($this->prefix) ? '/'.$this->prefix : '').'/data';
 
         $this->directoryTags = $this->normalizePath($this->directoryTags);
         $this->directoryData = $this->normalizePath($this->directoryData);
-
     }
 
     /**
@@ -324,16 +341,6 @@ class TaggableFileStore implements Store
     }
 
     /**
-     * Create the file cache directory if necessary.
-     *
-     * @param string $path
-     */
-    protected function createCacheDirectory($path)
-    {
-        return $this->makeDirRecursive(dirname($path));
-    }
-
-    /**
      * Increment the value of an item in the cache.
      *
      * @param string $key
@@ -377,7 +384,7 @@ class TaggableFileStore implements Store
      */
     public function forgetTags($string)
     {
-
+        throw new \LogicException('Not supported by this driver.');
     }
 
     /**
@@ -486,7 +493,6 @@ class TaggableFileStore implements Store
     protected function generatePathFilename($key) {
 
         $key = trim($key);
-        $prefix = !empty($this->prefix) ? $this->prefix.'/' : '';
 
         $tagsHash = md5(serialize($this->tags) . $key);
 
