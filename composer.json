@@ -6,6 +6,10 @@
         {
             "name": "Microweber",
             "email": "info@microweber.com"
+        },
+		{
+            "name": "Bozhidar Slaveykov",
+            "email": "bobi@microweber.com"
         }
     ],
     "require": {},
