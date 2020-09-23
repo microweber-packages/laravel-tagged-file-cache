@@ -13,13 +13,9 @@
         }
     ],
     "require": {},
-    "require-dev": {
-        "orchestra/testbench": "4.*",
-        "mockery/mockery": "*"
-    },
     "autoload": {
 	    "psr-4": {
-	      "MicroweberPackages\\": "src/"
+	      "MicroweberPackages\\Cache\\": ""
 	    }
 	},
   "homepage": "http://microweber.com",
