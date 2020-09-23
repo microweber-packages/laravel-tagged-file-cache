@@ -13,6 +13,10 @@
         }
     ],
     "require": {},
+     "require-dev": {
+      "orchestra/testbench": "4.*",
+      "mockery/mockery": "*"
+    },
     "autoload": {
 	    "psr-4": {
 	      "MicroweberPackages\\Cache\\": ""
