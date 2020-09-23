@@ -9,7 +9,7 @@ class TaggableFileCacheServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        Cache::extend('tfile', function ($app, $config) {
+        Cache::extend('file', function ($app, $config) {
 
             $locale = app()->getLocale();
             if ($locale) {
