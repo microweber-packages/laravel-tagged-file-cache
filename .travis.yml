@@ -5,6 +5,6 @@ before_script:
  - travis_retry composer install
  - curl -sSfL -o ~/.phpenv/versions/$TRAVIS_PHP_VERSION/bin/phpunit https://phar.phpunit.de/phpunit-5.7.phar
  - composer install --prefer-dist --dev
-script: "phpunit"
+script: "vendor/bin/phpunit -c phpunit.xml --testdox --verbose"
 notifications:
   email: false
