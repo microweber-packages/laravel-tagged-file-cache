@@ -1,9 +1,5 @@
 <?php
-
-use Orchestra\Testbench\Contracts\TestCase;
-use MicroweberPackages\Cache\TaggableFileStore;
-use MicroweberPackages\Cache\TaggableFileCacheServiceProvider;
-use MicroweberPackages\Cache\TaggedFileCache;
+namespace MicroweberPackages\Cache\tests;
 
 class TaggableFileStoreTest extends BaseTest
 {
