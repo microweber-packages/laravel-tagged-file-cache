@@ -1,11 +1,8 @@
 <?php
 
-namespace MicroweberPackages\Core\Cache\tests;
+namespace MicroweberPackages\Cache\tests;
 
-use Cache;
-use MicroweberPackages\Core\tests\TestCase;
-
-class CacheTest extends TestCase
+class CacheTest extends BaseTest
 {
     public function testCache()
     {
